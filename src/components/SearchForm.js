@@ -1,47 +1,65 @@
 import React, { useState } from 'react';
-import { fakeApi } from '../api/api'; // подключаем API
+import { searchTrains } from '../api/api';
 
 const SearchForm = ({ onSearch }) => {
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(new Date());
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const from_code = from;
+    const to_code = to;
+
+    // Форматируем дату в DD.MM.YYYY
+    const formattedDate = new Date(date).toLocaleDateString('ru-RU');
+
     try {
-      const allTrains = await fakeApi.getTrains();
+      const results = await searchTrains({
+        from_code,
+        to_code,
+        date: formattedDate,
+      });
 
-      const normalize = (s) => (s || '').trim().toLowerCase();
-
-      const filtered = allTrains.filter((train) =>
-        (!from || normalize(train.from) === normalize(from)) &&
-        (!to || normalize(train.to) === normalize(to)) &&
-        (!date || train.date === date)
-      );
-
-      onSearch(filtered, { from, to, date });
-
-    } catch (error) {
-      console.error('Ошибка при получении поездов:', error);
-      onSearch([], { from, to, date });
+      onSearch(results, {
+        from_code,
+        to_code,
+        date: formattedDate,
+      });
+    } catch (err) {
+      alert('Ошибка при поиске поездов');
+      console.error(err);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-      <div>
-        <label>Откуда: </label>
-        <input type="text" value={from} onChange={(e) => setFrom(e.target.value)} />
-      </div>
-      <div>
-        <label>Куда: </label>
-        <input type="text" value={to} onChange={(e) => setTo(e.target.value)} />
-      </div>
-      <div>
-        <label>Дата: </label>
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-      </div>
+    <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
+      <label>
+        Откуда:{' '}
+        <input
+          value={from}
+          onChange={(e) => setFrom(e.target.value)}
+          required
+        />
+      </label>{' '}
+      <label>
+        Куда:{' '}
+        <input
+          value={to}
+          onChange={(e) => setTo(e.target.value)}
+          required
+        />
+      </label>{' '}
+      <label>
+        Дата:{' '}
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          required
+        />
+      </label>{' '}
       <button type="submit">Найти</button>
     </form>
   );

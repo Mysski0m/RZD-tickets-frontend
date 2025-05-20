@@ -7,20 +7,29 @@ import LoginForm from './components/LoginForm';
 const MainApp = () => {
   const { user } = useAuth();
   const [results, setResults] = useState([]);
-  const [filters, setFilters] = useState(null); // добавили хранение фильтров
+  const [fromCode, setFromCode] = useState('');
+  const [toCode, setToCode] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
+
+  const handleSearch = (data, searchMeta) => {
+    setResults(data);
+    setFromCode(searchMeta.from_code);
+    setToCode(searchMeta.to_code);
+    setSelectedDate(searchMeta.date);
+  };
 
   if (!user) return <LoginForm />;
-
-  const handleSearch = (newResults, appliedFilters) => {
-    setResults(newResults);
-    setFilters(appliedFilters); // сохраняем фильтры
-  };
 
   return (
     <div style={{ padding: '20px' }}>
       <h1>Поиск поездов {user?.guest ? '(Гость)' : ''}</h1>
       <SearchForm onSearch={handleSearch} />
-      <TrainResults results={results} filters={filters} />
+      <TrainResults
+        results={results}
+        fromCode={fromCode}
+        toCode={toCode}
+        selectedDate={selectedDate}
+      />
     </div>
   );
 };
