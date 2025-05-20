@@ -7,34 +7,36 @@ const SearchForm = ({ onSearch }) => {
   const [date, setDate] = useState(new Date());
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const from_code = from;
-    const to_code = to;
+  const from_code = from;
+  const to_code = to;
 
-    // Форматируем дату в DD.MM.YYYY
-    const formattedDate = new Date(date).toLocaleDateString('ru-RU');
+  const formattedDate = new Date(date).toLocaleDateString('ru-RU');
 
-    try {
-      const results = await searchTrains({
-        from_code,
-        to_code,
-        date: formattedDate,
-      });
+  try {
 
-      onSearch(results, {
-        from_code,
-        to_code,
-        date: formattedDate,
-      });
-    } catch (err) {
-      alert('Ошибка при поиске поездов');
-      console.error(err);
-    }
-  };
+    onSearch(() => {});
+
+    const results = await searchTrains({
+      from_code,
+      to_code,
+      date: formattedDate,
+    });
+
+    onSearch(results, {
+      from_code,
+      to_code,
+      date: formattedDate,
+    });
+  } catch (err) {
+    alert('Ошибка при поиске поездов');
+    console.error(err);
+  }
+};
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
+    <form onSubmit={handleSubmit} style={{ marginBottom: 20, display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
       <label>
         Откуда:{' '}
         <input
@@ -42,7 +44,7 @@ const SearchForm = ({ onSearch }) => {
           onChange={(e) => setFrom(e.target.value)}
           required
         />
-      </label>{' '}
+      </label>
       <label>
         Куда:{' '}
         <input
@@ -50,16 +52,16 @@ const SearchForm = ({ onSearch }) => {
           onChange={(e) => setTo(e.target.value)}
           required
         />
-      </label>{' '}
+      </label>
       <label>
         Дата:{' '}
         <input
           type="date"
-          value={date}
+          value={date instanceof Date ? date.toISOString().substring(0, 10) : date}
           onChange={(e) => setDate(e.target.value)}
           required
         />
-      </label>{' '}
+      </label>
       <button type="submit">Найти</button>
     </form>
   );
