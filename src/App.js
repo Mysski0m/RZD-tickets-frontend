@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './auth/AuthContext';
 import SearchForm from './components/SearchForm';
 import TrainResults from './components/TrainResults';
 import LoginForm from './components/LoginForm';
+import Footer from './components/Footer';
 
 const MainApp = () => {
   const { user } = useAuth();
@@ -10,7 +11,7 @@ const MainApp = () => {
   const [fromCode, setFromCode] = useState('');
   const [toCode, setToCode] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
-  const [loading, setLoading] = useState(false); // состояние загрузки
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = async (dataOrFunc, searchMeta) => {
     if (typeof dataOrFunc === 'function') {
@@ -43,6 +44,7 @@ const MainApp = () => {
           selectedDate={selectedDate}
         />
       )}
+       <Footer />
     </div>
   );
 };

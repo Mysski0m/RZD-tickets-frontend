@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { searchTrains } from '../api/api';
+import { searchTrains, getStationCodeByName } from '../api/api';
 
 const SearchForm = ({ onSearch }) => {
   const [from, setFrom] = useState('');
@@ -7,36 +7,44 @@ const SearchForm = ({ onSearch }) => {
   const [date, setDate] = useState(new Date());
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const from_code = from;
-  const to_code = to;
+    try {
+      onSearch(() => {});
 
-  const formattedDate = new Date(date).toLocaleDateString('ru-RU');
+      const from_code = await getStationCodeByName(from.trim());
+      const to_code = await getStationCodeByName(to.trim());
 
-  try {
+      const formattedDate = new Date(date).toLocaleDateString('ru-RU');
 
-    onSearch(() => {});
+      const results = await searchTrains({
+        from_code,
+        to_code,
+        date: formattedDate,
+      });
 
-    const results = await searchTrains({
-      from_code,
-      to_code,
-      date: formattedDate,
-    });
-
-    onSearch(results, {
-      from_code,
-      to_code,
-      date: formattedDate,
-    });
-  } catch (err) {
-    alert('Ошибка при поиске поездов');
-    console.error(err);
-  }
-};
+      onSearch(results, {
+        from_code,
+        to_code,
+        date: formattedDate,
+      });
+    } catch (err) {
+      alert('Неверно введен город отправления и/или назначения');
+      console.error(err);
+    }
+  };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: 20, display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        marginBottom: 20,
+        display: 'flex',
+        gap: 10,
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+      }}
+    >
       <label>
         Откуда:{' '}
         <input
@@ -57,7 +65,11 @@ const SearchForm = ({ onSearch }) => {
         Дата:{' '}
         <input
           type="date"
-          value={date instanceof Date ? date.toISOString().substring(0, 10) : date}
+          value={
+            date instanceof Date
+              ? date.toISOString().substring(0, 10)
+              : date
+          }
           onChange={(e) => setDate(e.target.value)}
           required
         />

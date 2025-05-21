@@ -17,13 +17,21 @@ export const searchTrains = async ({ from_code, to_code, date }) => {
   return data;
 };
 
+export const getStationCodeByName = async (name) => {
+  const response = await fetch(`${BASE_URL}/api/v1/stations?name=${encodeURIComponent(name)}`);
+  if (!response.ok) throw new Error('Город не найден');
+  const code = await response.json();
+  if (!code || typeof code !== 'string') throw new Error('Некорректный ответ от API');
+  return code;
+};
+
 export const getTrainDetails = async ({
   from_code,
   to_code,
   date,
   train_number,
   departure_time,
-  arrival_time, // <-- добавим сюда
+  arrival_time,
 }) => {
   const train_request = { from_code, to_code, date };
 
@@ -31,12 +39,14 @@ export const getTrainDetails = async ({
 
   const response = await fetch(`${BASE_URL}/api/v1/trains/get_seats`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json',
+               'Origin': 'http://localhost:3000',
+     },
     body: JSON.stringify({
       train_request,
       train_number,
       departure_time,
-      arrival_time, // <-- добавим это в JSON
+      arrival_time,
     }),
   });
 

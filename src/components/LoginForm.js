@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../auth/AuthContext';
 import { login, guestLogin } from '../api/api';
+import Footer from './Footer';
 
 const LoginForm = () => {
   const { login: setUser } = useAuth();
@@ -59,6 +60,7 @@ const LoginForm = () => {
       <hr />
 
       <button onClick={handleGuestLogin}>Войти как гость</button>
+      <Footer />
     </div>
   );
 };
