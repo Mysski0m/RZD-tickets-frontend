@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { register, login } from '../api/auth.js';
 import Footer from './Footer.js';
+import styles from './LoginForm.module.css';
 
 const AuthForm = ({ onAuth }) => {
   const [isRegister, setIsRegister] = useState(false);
@@ -33,17 +34,52 @@ const AuthForm = ({ onAuth }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-      <input name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-      <input name="name" placeholder="Имя" value={form.name} onChange={handleChange} required />
-      <input name="password" type="password" placeholder="Пароль" value={form.password} onChange={handleChange} required />
-      <button type="submit">{isRegister ? 'Зарегистрироваться' : 'Войти'}</button>
-      <button type="button" onClick={() => setIsRegister(!isRegister)}>
-        {isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрируйтесь'}
-      </button>
-      <button type="button" onClick={handleGuest}>Войти как гость</button>
-      <Footer />
-    </form>
+    <div className={styles.container}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h2 className={styles.title}>
+          {isRegister ? 'Регистрация' : 'Вход'}
+        </h2>
+        <input
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+          className={styles.input}
+        />
+        <input
+          name="name"
+          placeholder="Имя"
+          value={form.name}
+          onChange={handleChange}
+          required
+          className={styles.input}
+        />
+        <input
+          name="password"
+          type="password"
+          placeholder="Пароль"
+          value={form.password}
+          onChange={handleChange}
+          required
+          className={styles.input}
+        />
+        <button type="submit" className={styles.button}>
+          {isRegister ? 'Зарегистрироваться' : 'Войти'}
+        </button>
+        <button
+          type="button"
+          onClick={() => setIsRegister(!isRegister)}
+          className={styles.toggleButton}
+        >
+          {isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрируйтесь'}
+        </button>
+        {/* <button type="button" onClick={handleGuest} className={styles.guestButton}> */}
+          {/* Войти как гость */}
+        {/* </button> */}
+        <Footer />
+      </form>
+    </div>
   );
 };
 
