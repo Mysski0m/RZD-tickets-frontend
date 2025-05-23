@@ -58,6 +58,7 @@ export const getTrainDetails = async ({
   return data;
 };
 
+/*
 export const login = async ({ username, password }) => {
   const response = await fetch(`${BASE_URL}/login`, {
     method: 'POST',
@@ -80,3 +81,4 @@ export const guestLogin = async () => {
     },
   });
 };
+*/

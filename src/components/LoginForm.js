@@ -1,68 +1,50 @@
 import React, { useState } from 'react';
-import { useAuth } from '../auth/AuthContext';
-import { login, guestLogin } from '../api/api';
-import Footer from './Footer';
+import { register, login } from '../api/auth.js';
+import Footer from './Footer.js';
 
-const LoginForm = () => {
-  const { login: setUser } = useAuth();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+const AuthForm = ({ onAuth }) => {
+  const [isRegister, setIsRegister] = useState(false);
+  const [form, setForm] = useState({ email: '', name: '', password: '' });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
 
     try {
-      const response = await login({ username, password });
-      setUser(response.user);
+      if (isRegister) {
+        await register({ ...form, confirmed_password: form.password });
+      }
+      
+      const userData = await login(form);
+      // const accessToken = await login(form);
+      localStorage.setItem('accessToken', userData.accessToken);
+      onAuth(userData);
     } catch (err) {
-      console.error('Ошибка входа:', err);
-      setError('Неверный логин или пароль');
+      alert(err.message);
     }
   };
 
-  const handleGuestLogin = async () => {
-    try {
-      const response = await guestLogin();
-      setUser(response.user);
-    } catch (err) {
-      console.error('Ошибка гостевого входа:', err);
-      setError('Ошибка при входе как гость');
-    }
+  const handleGuest = () => {
+    localStorage.setItem('accessToken', 'guest');
+    onAuth();
   };
 
   return (
-    <div style={{ padding: 20, maxWidth: 300, margin: 'auto' }}>
-      <h2>Вход</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <input
-            placeholder="Логин"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <input
-            placeholder="Пароль"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Войти</button>
-      </form>
-
-      <hr />
-
-      <button onClick={handleGuestLogin}>Войти как гость</button>
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <input name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+      <input name="name" placeholder="Имя" value={form.name} onChange={handleChange} required />
+      <input name="password" type="password" placeholder="Пароль" value={form.password} onChange={handleChange} required />
+      <button type="submit">{isRegister ? 'Зарегистрироваться' : 'Войти'}</button>
+      <button type="button" onClick={() => setIsRegister(!isRegister)}>
+        {isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрируйтесь'}
+      </button>
+      <button type="button" onClick={handleGuest}>Войти как гость</button>
       <Footer />
-    </div>
+    </form>
   );
 };
 
-export default LoginForm;
+export default AuthForm;
