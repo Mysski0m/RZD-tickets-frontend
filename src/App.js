@@ -4,7 +4,8 @@ import SearchForm from './components/SearchForm';
 import TrainResults from './components/TrainResults';
 import LoginForm from './components/LoginForm';
 import Footer from './components/Footer';
-import { login, refreshToken } from './api/auth';
+import { refreshToken } from './api/auth';
+import styles from './App.module.css'
 
 const MainApp = () => {
   const { user, login } = useAuth();
@@ -32,17 +33,17 @@ const MainApp = () => {
     checkRefresh();
   }, [login]);
 
-  const handleAuth = () => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    const accessToken = localStorage.getItem('accessToken');
-    console.log('Current user:', user);
+  // const handleAuth = () => {
+  //   const storedUser = JSON.parse(localStorage.getItem('user'));
+  //   const accessToken = localStorage.getItem('accessToken');
+  //   console.log('Current user:', user);
 
-    if (storedUser && accessToken) {
-      login({ ...storedUser, accessToken });
-    } else {
-      login(null);
-    }
-  };
+  //   if (storedUser && accessToken) {
+  //     login({ ...storedUser, accessToken });
+  //   } else {
+  //     login(null);
+  //   }
+  // };
 
   const handleSearch = async (dataOrFunc, searchMeta) => {
     if (typeof dataOrFunc === 'function') {
@@ -67,6 +68,7 @@ const MainApp = () => {
 
   return (
     <div style={{ padding: '20px', maxWidth: 800, margin: '0 auto' }}>
+      <h1 className={styles.logo}>SeatTrack</h1>
       <h1>Поиск поездов {user?.guest ? '(Гость)' : ''}</h1>
       <SearchForm onSearch={handleSearch} />
       {loading ? (

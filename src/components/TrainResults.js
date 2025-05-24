@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import TrainCard from './TrainCard';
+import styles from './TrainResults.module.css';
 
 const TrainResults = ({ results, fromCode, toCode, selectedDate }) => {
   const [expandedTrain, setExpandedTrain] = useState(null);
@@ -9,11 +10,11 @@ const TrainResults = ({ results, fromCode, toCode, selectedDate }) => {
   };
 
   if (!results || results.length === 0) {
-    return <p>Нет доступных поездов</p>;
+    return <p className={styles.message}>Нет доступных поездов</p>;
   }
 
   return (
-    <div>
+    <div className={styles.container}>
       {results.map((train) => (
         <TrainCard
           key={train.number}

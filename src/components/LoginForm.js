@@ -28,57 +28,60 @@ const AuthForm = ({ onAuth }) => {
     }
   };
 
-  const handleGuest = () => {
-    localStorage.setItem('accessToken', 'guest');
-    onAuth();
-  };
+  // const handleGuest = () => {
+  //   localStorage.setItem('accessToken', 'guest');
+  //   onAuth();
+  // };
 
   return (
-    <div className={styles.container}>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <h2 className={styles.title}>
-          {isRegister ? 'Регистрация' : 'Вход'}
-        </h2>
-        <input
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          required
-          className={styles.input}
-        />
-        <input
-          name="name"
-          placeholder="Имя"
-          value={form.name}
-          onChange={handleChange}
-          required
-          className={styles.input}
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Пароль"
-          value={form.password}
-          onChange={handleChange}
-          required
-          className={styles.input}
-        />
-        <button type="submit" className={styles.button}>
-          {isRegister ? 'Зарегистрироваться' : 'Войти'}
-        </button>
-        <button
-          type="button"
-          onClick={() => setIsRegister(!isRegister)}
-          className={styles.toggleButton}
-        >
-          {isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрируйтесь'}
-        </button>
-        {/* <button type="button" onClick={handleGuest} className={styles.guestButton}> */}
-          {/* Войти как гость */}
-        {/* </button> */}
-        <Footer />
-      </form>
+    <div className={styles.wrapper}>
+      <h1 className={styles.logo}>SeatTrack</h1>
+      <div className={styles.container}>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <h2 className={styles.title}>
+            {isRegister ? 'Регистрация' : 'Вход'}
+          </h2>
+          <input
+            name="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            required
+            className={styles.input}
+          />
+          <input
+            name="name"
+            placeholder="Имя"
+            value={form.name}
+            onChange={handleChange}
+            required
+            className={styles.input}
+          />
+          <input
+            name="password"
+            type="password"
+            placeholder="Пароль"
+            value={form.password}
+            onChange={handleChange}
+            required
+            className={styles.input}
+          />
+          <button type="submit" className={styles.button}>
+            {isRegister ? 'Зарегистрироваться' : 'Войти'}
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsRegister(!isRegister)}
+            className={styles.toggleButton}
+          >
+            {isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрируйтесь'}
+          </button>
+          {/* <button type="button" onClick={handleGuest} className={styles.guestButton}> */}
+            {/* Войти как гость */}
+          {/* </button> */}
+          <Footer />
+        </form>
+      </div>
     </div>
   );
 };

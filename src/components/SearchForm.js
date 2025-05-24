@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { searchTrains, getStationCodeByName } from '../api/api';
+import styles from './SearchForm.module.css';
 
 const SearchForm = ({ onSearch }) => {
   const [from, setFrom] = useState('');
@@ -11,23 +12,13 @@ const SearchForm = ({ onSearch }) => {
 
     try {
       onSearch(() => {});
-
       const from_code = await getStationCodeByName(from.trim());
       const to_code = await getStationCodeByName(to.trim());
-
       const formattedDate = new Date(date).toLocaleDateString('ru-RU');
 
-      const results = await searchTrains({
-        from_code,
-        to_code,
-        date: formattedDate,
-      });
+      const results = await searchTrains({ from_code, to_code, date: formattedDate });
 
-      onSearch(results, {
-        from_code,
-        to_code,
-        date: formattedDate,
-      });
+      onSearch(results, { from_code, to_code, date: formattedDate });
     } catch (err) {
       alert('Неверно введен город отправления и/или назначения');
       console.error(err);
@@ -35,35 +26,29 @@ const SearchForm = ({ onSearch }) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        marginBottom: 20,
-        display: 'flex',
-        gap: 10,
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-      }}
-    >
-      <label>
-        Откуда:{' '}
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <label className={styles.label}>
+        Откуда:
         <input
+          className={styles.input}
           value={from}
           onChange={(e) => setFrom(e.target.value)}
           required
         />
       </label>
-      <label>
-        Куда:{' '}
+      <label className={styles.label}>
+        Куда:
         <input
+          className={styles.input}
           value={to}
           onChange={(e) => setTo(e.target.value)}
           required
         />
       </label>
-      <label>
-        Дата:{' '}
+      <label className={styles.label}>
+        Дата:
         <input
+          className={styles.input}
           type="date"
           value={
             date instanceof Date
@@ -74,7 +59,7 @@ const SearchForm = ({ onSearch }) => {
           required
         />
       </label>
-      <button type="submit">Найти</button>
+      <button type="submit" className={styles.button}>Найти</button>
     </form>
   );
 };
